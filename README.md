@@ -8,3 +8,6 @@ Over the past decade, web applications have evolved to make heavy use of JavaScr
 + To make the browser’s forward and backward buttons work.
 + To enable sharing of URLs or use them to create links from any HTML document.
 + History.JS currently supports a lot of JavaScript libraries, but for this example I will only be demonstrating how to use the jQuery version of History.JS in working with dynamic contents.
+
+## Demo
+See it in action on [this link](http://carlofontanos.com/demo/history-js/)

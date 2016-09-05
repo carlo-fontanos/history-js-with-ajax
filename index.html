@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Example of History.JS with AJAX by Carlo Fontanos</title>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery.history.js"></script>
+	
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		  
+</head>
+<body>
+	<br />
+	<div class = "container">
+		<nav class="navbar navbar-default">
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="home">Home</a></li>
+					<li><a href="about">About</a></li>
+					<li><a href="contact">Contact</a></li>		
+				</ul>	
+			</div>
+		</nav>
+		<div class = "content"></div>
+	</div>
+</body>
+
+<script type='text/javascript'>
+$(function(){
+	
+	var History = window.History;
+	
+	if (History.enabled) {
+		var page = get_url_value('page');
+		var path = page ? page : 'home';
+		// Load the page
+		load_page_content(path);
+	} else {
+		return false;
+	}
+
+	// Content update and back/forward button handler
+	History.Adapter.bind(window, 'statechange', function() {
+		var State = History.getState();	
+		// Do ajax
+		load_page_content(State.data.path);
+		// Log the history object to your browser's console
+		History.log(State);
+	});
+
+	// Navigation link handler
+	$('body').on('click', 'nav a', function(e) {
+		e.preventDefault();
+		
+		var urlPath = $(this).attr('href');
+		var title = $(this).text();	
+		
+		History.pushState({path: urlPath}, title, './?page=' + urlPath); // When we do this, History.Adapter will also execute its contents. 		
+	});
+	
+	function load_page_content(page) {
+		$.ajax({  
+			type: 'post',
+			url: page + '.html',
+			data: {},						
+			success: function(response) {
+				$('.content').html(response);
+			}
+		});
+	}
+	
+	function get_url_value(variable) {
+	   var query = window.location.search.substring(1);
+	   var vars = query.split("&");
+	   for (var i=0;i<vars.length;i++) {
+			   var pair = vars[i].split("=");
+			   if(pair[0] == variable){return pair[1];}
+	   }
+	   return(false);
+    }
+});
+
+</script>
+</html>
